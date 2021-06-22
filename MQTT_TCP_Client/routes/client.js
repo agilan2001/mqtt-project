@@ -12,7 +12,7 @@ router.post('/connect', function(req, res, next) {
     client.on('connect',function(){
         clients[clientId] = {}
         clients[clientId].client = client
-        res.send("client connected")
+        res.end("client connected")
     })
 });
 
@@ -21,7 +21,7 @@ router.post('/subscribe', function(req, res, next) {
     var client = clients[clientId].client
     client.subscribe(topic,{qos:qos}, function(err){
         if(!err){
-            res.send(`Subscribed ${clientId} to ${topic} with QOS ${qos}`)
+            res.end(`Subscribed ${clientId} to ${topic} with QOS ${qos}`)
         }
     })
 });
@@ -31,7 +31,7 @@ router.post('/publish', function(req, res, next) {
     var client = clients[clientId].client
     client.publish(topic, message,{qos:qos, retain: retain}, function(err){
         if(!err){
-            res.send(`Published to ${topic} with QOS ${qos}`)
+            res.end(`Published to ${topic} with QOS ${qos}`)
         }
     })
 });
@@ -45,7 +45,7 @@ appWs.ws("/client_ws", function(ws,req){
   ws.on("message",function(mes){
       clients[mes].socket = ws
       clients[mes].client.on("message", function(topic, message){
-          ws.send(JSON.stringify({topic:topic, message: message}))
+          ws.send(JSON.stringify({topic:topic, message: message.toString()}))
       })
 
   })
