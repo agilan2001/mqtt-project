@@ -7,8 +7,12 @@ var logger = require('morgan');
 
 
 var app = express()
+
 var indexRouter = require('./routes/index');
-var clientRouter = require('./routes/client');
+var addClientRouter = require('./routes/addClient');
+var messageRoomRouter = require('./routes/messageRoom');
+
+var clientRouter = require('./api/client');
 
 
 
@@ -24,6 +28,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/connect', addClientRouter);
+app.use('/messageRoom', messageRoomRouter);
+
 app.use('/client', clientRouter);
 
 

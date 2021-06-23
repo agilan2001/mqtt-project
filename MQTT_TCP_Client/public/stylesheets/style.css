@@ -6,3 +6,19 @@ body {
 a {
   color: #00B7FF;
 }
+
+#mes_cont>div:nth-child(1) {
+  display: none;
+}
+
+#main_flex>div {
+  border: 2px solid;
+  border-radius: 10px;
+  padding: 10px 20px 10px 10px;
+  margin: 25px;
+  text-align: center;
+}
+
+#main_flex>div>div {
+  margin-bottom: 10px;
+}
