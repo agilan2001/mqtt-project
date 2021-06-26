@@ -1,3 +1,6 @@
 node_modules/
 mqttjs/
-quic_test/
+quic_test/*
+!quic_test/nodejs_quic_server*
+!quic_test/cert.pem
+!quic_test/key.pem
