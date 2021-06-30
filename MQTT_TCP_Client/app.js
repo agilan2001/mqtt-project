@@ -8,14 +8,15 @@ var logger = require('morgan');
 
 var app = express()
 
+var clientRouter = require('./api/client');
+
 var indexRouter = require('./routes/index');
 var addClientRouter = require('./routes/addClient');
 var messageRoomRouter = require('./routes/messageRoom');
 
-var clientRouter = require('./api/client');
-
-
-
+//for QUIC landing page
+var addClientRouterQUIC = require("./routes/addClientQUIC");
+var messageRoomQUICRouter = require('./routes/messageRoomQUIC');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -30,8 +31,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/connect', addClientRouter);
 app.use('/messageRoom', messageRoomRouter);
-
 app.use('/client', clientRouter);
+
+//for QUIC landing page
+app.use('/connectQUIC',addClientRouterQUIC);
+app.use('/messageRoomQUIC',messageRoomQUICRouter);
+
 
 
 
