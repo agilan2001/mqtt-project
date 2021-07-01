@@ -26,6 +26,7 @@ router.post('/connect', function (req, res, next) {
     })
 });
 
+
 router.post('/subscribe', function (req, res, next) {
     var { clientId, topic, qos } = req.body;
     var client = clients[clientId].client
@@ -60,6 +61,25 @@ router.post('/disconnect', function (req, res, next) {
     client.end()
 });
 
+router.post('/connectQUIC', function (req, res, next) {
+    
+});
+
+router.post('/subscribeQUIC', function (req, res, next) {
+    
+});
+
+router.post('/publishQUIC', function (req, res, next) {
+    
+});
+
+router.post('/unsubscribeQUIC', function (req, res, next) {
+    
+});
+
+router.post('/disconnectQUIC', function (req, res, next) {
+    
+});
 
 
 
@@ -71,7 +91,7 @@ appWs.ws("/client_ws", function (ws, req) {
         clients[mes].socket = ws
 
         ws.on("close", function (event) {
-            console.log("disconnect ")
+            console.log("disconnect")
             clients[mes].client.options.keepalive = clients[mes].client.options.keepalive * 10
             clients[mes].client.options.reconnectPeriod = 0
             clients[mes] = undefined

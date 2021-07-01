@@ -63,3 +63,23 @@ var subs = {};
     ih+="</ul>"
     subs_cont.innerHTML = ih
   }
+
+  function subscribe_click_QUIC() {
+   
+
+  }
+  function publish_click_QUIC() {
+   
+  }
+
+  function unsubscribe_click_QUIC() {
+    
+
+  }
+
+  function disconnect_click_QUIC() {
+
+  }
+
+
+  
