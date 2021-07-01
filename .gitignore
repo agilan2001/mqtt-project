@@ -6,3 +6,5 @@ quic_test/*
 !quic_test/key.pem
 !quic_test/quic_vs_tcp_server.js
 !quic_test/tls_quic_serve.js
+!quic_test/tls_quic.js
+desktop.ini
