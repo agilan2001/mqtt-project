@@ -9,7 +9,7 @@ var clients = {};
 router.post('/connect', function (req, res, next) {
     console.log(req.body)
     clientId = req.body.clientId
-    var options = {clientId: clientId, keepalive: req.body.keep_alive }
+    var options = {clientId: clientId, keepalive: req.body.keep_alive, rejectUnauthorized: false }
     if(req.body.last_will_topic)
         options["will"] = {
             topic:req.body.last_will_topic,
@@ -18,7 +18,7 @@ router.post('/connect', function (req, res, next) {
             retain:req.body.last_will_retain
         }
         
-    var client = mqtt.connect("mqtt://localhost", options)
+    var client = mqtt.connect("mqtts://localhost:1885", options)
     client.on('connect', function () {
         clients[clientId] = {}
         clients[clientId].client = client
