@@ -18,7 +18,9 @@ router.post('/connect', function (req, res, next) {
             retain:req.body.last_will_retain
         }
         
-    var client = mqtt.connect("mqtts://localhost:1885", options)
+    var client = mqtt.connect(
+        `${req.body.trans_prot=='tcp'?'mqtts':'quic'}://${req.body.broker_url}:${req.body.broker_port}`, 
+        options)
     client.on('connect', function () {
         clients[clientId] = {}
         clients[clientId].client = client
@@ -60,27 +62,6 @@ router.post('/disconnect', function (req, res, next) {
     var client = clients[clientId].client
     client.end()
 });
-
-router.post('/connectQUIC', function (req, res, next) {
-    
-});
-
-router.post('/subscribeQUIC', function (req, res, next) {
-    
-});
-
-router.post('/publishQUIC', function (req, res, next) {
-    
-});
-
-router.post('/unsubscribeQUIC', function (req, res, next) {
-    
-});
-
-router.post('/disconnectQUIC', function (req, res, next) {
-    
-});
-
 
 
 var appWs = express()

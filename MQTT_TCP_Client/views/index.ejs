@@ -12,37 +12,14 @@
 </head>
 
 <body>
-  <script>
-    function layerChoice(id){
-      if(id == "tcp"){
-        document.getElementById('startBtn').href = "/connect"
-      }
-      if(id == "quic"){
-        document.getElementById('startBtn').href = "/connectQUIC"
-      }
-
-    }
-  </script>
   
   <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center;">
     <img src="images/Viasat_logo.png" style="height:10vh;"> 
     <div style="text-align: center; font-size: 30px; font-weight: bold;"> Internship Programme </div>
   </div>
   <div style="margin: 30px auto; width: fit-content; font-size:30px">MQTT over TCP / QUIC</div>
-  <div id="main_flex" style="display: flex; justify-content: center; flex-wrap: wrap; " >
-    <div class="dropdown">
-      <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-        Choose Transport Layer
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-        <li><a class="dropdown-item"  id ="tcp" onclick="layerChoice('tcp')"> TCP </a></li>
-        <li><a class="dropdown-item" id="quic" onclick="layerChoice('quic')"> QUIC </a></li>
-      </ul>
-    </div>
-
-    
-  </div>
-  <a class="btn btn-primary" style="margin:auto; display: block; width: fit-content; font-size: 30px;" id = "startBtn" href="#">START</a>
+  
+  <a class="btn btn-primary" style="margin:auto; display: block; width: fit-content; font-size: 30px;" id = "startBtn" href="addClient">START</a>
 
 
 

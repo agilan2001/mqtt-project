@@ -6,7 +6,7 @@ body {
 
 .bg-img-1 {
   min-height: 380px;
-  background-image: url(https://images.pexels.com/photos/1882979/pexels-photo-1882979.jpeg?cs=srgb&dl=pexels-sunyu-kim-1882979.jpg&fm=jpg);
+  /* background-image: url(https://images.pexels.com/photos/1882979/pexels-photo-1882979.jpeg?cs=srgb&dl=pexels-sunyu-kim-1882979.jpg&fm=jpg); */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -16,7 +16,7 @@ body {
 .bg-img-2 {
   min-height: 380px;
   min-height: 380px;
-  background-image: url(https://images.pexels.com/photos/1903747/pexels-photo-1903747.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940);
+  /* background-image: url(https://images.pexels.com/photos/1903747/pexels-photo-1903747.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940); */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
