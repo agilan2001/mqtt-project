@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'MQTT Over TCP' });
+  res.render('index', { title: 'MQTT Over TCP / QUIC' });
 });
 
 module.exports = router;

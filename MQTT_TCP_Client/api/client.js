@@ -18,13 +18,16 @@ router.post('/connect', function (req, res, next) {
             retain:req.body.last_will_retain
         }
         
-    var client = mqtt.connect("mqtts://localhost:1885", options)
+    var client = mqtt.connect(
+        `${req.body.trans_prot=='tcp'?'mqtts':'quic'}://${req.body.broker_url}:${req.body.broker_port}`, 
+        options)
     client.on('connect', function () {
         clients[clientId] = {}
         clients[clientId].client = client
         res.end("client connected")
     })
 });
+
 
 router.post('/subscribe', function (req, res, next) {
     var { clientId, topic, qos } = req.body;
@@ -61,8 +64,6 @@ router.post('/disconnect', function (req, res, next) {
 });
 
 
-
-
 var appWs = express()
 var expressWs = require('express-ws')(appWs);
 
@@ -71,7 +72,7 @@ appWs.ws("/client_ws", function (ws, req) {
         clients[mes].socket = ws
 
         ws.on("close", function (event) {
-            console.log("disconnect ")
+            console.log("disconnect")
             clients[mes].client.options.keepalive = clients[mes].client.options.keepalive * 10
             clients[mes].client.options.reconnectPeriod = 0
             clients[mes] = undefined

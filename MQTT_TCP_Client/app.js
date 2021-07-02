@@ -8,13 +8,11 @@ var logger = require('morgan');
 
 var app = express()
 
+var clientRouter = require('./api/client');
+
 var indexRouter = require('./routes/index');
 var addClientRouter = require('./routes/addClient');
 var messageRoomRouter = require('./routes/messageRoom');
-
-var clientRouter = require('./api/client');
-
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,12 +26,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/connect', addClientRouter);
+app.use('/addClient', addClientRouter);
 app.use('/messageRoom', messageRoomRouter);
-
 app.use('/client', clientRouter);
-
-
 
 
 // catch 404 and forward to error handler
