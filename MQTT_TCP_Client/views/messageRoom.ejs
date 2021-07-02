@@ -178,6 +178,8 @@
                     var { topic, message } = JSON.parse(event.data)
                     var toast_container = document.getElementById("mes_cont")
                     var toast_el = toast_container.querySelector(".toast").cloneNode(true)
+                    toast_el.classList.remove('bg-danger');
+                    toast_el.classList.add('bg-info');
                     toast_el.querySelector(".mes_topic").innerHTML = topic
                     toast_el.querySelector(".mes_body").innerHTML = message
 
