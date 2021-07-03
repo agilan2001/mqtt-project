@@ -1,3 +1,4 @@
+process.env.TLSLOG = "tls_log.txt"
 var createError = require('http-errors');
 var express = require('express');
 

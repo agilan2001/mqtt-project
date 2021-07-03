@@ -25,9 +25,9 @@ const tls_server = serverFactory.createServer(aedes, {
     }
 })
 
-tls_server.on('keylog', (line) => log.write(line))
-quic_server.on('session',(req)=>{
-    req.on('keylog',(line)=>log.write(line))
-})
+// tls_server.on('keylog', (line) => log.write(line))
+// quic_server.on('session',(req)=>{
+//     req.on('keylog',(line)=>log.write(line))
+// })
 
 tls_server.listen(1885)

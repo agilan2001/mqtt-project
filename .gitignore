@@ -9,3 +9,4 @@ quic_test/*
 !quic_test/tls_quic.js
 desktop.ini
 MQTT_Broker/aedes-server-factory/tls_log.txt
+MQTT_Client/tls_log.txt
