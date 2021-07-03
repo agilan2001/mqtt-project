@@ -10,6 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "aedes": "^0.46.0",
-    "aedes-server-factory": "github:agilan2001/aedes-server-factory"
+    "aedes-server-factory": "github:agilan2001/aedes-server-factory#9467b08b3b3ee55b3ed7c3572d88714502397c85"
   }
 }
