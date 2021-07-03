@@ -24,7 +24,7 @@ router.post('/connect', function (req, res, next) {
     client.on('connect', function () {
         clients[clientId] = {}
         clients[clientId].client = client
-        res.end("client connected")
+        res.end(`Client ${clientId} connected`)
     })
 });
 
@@ -59,8 +59,10 @@ router.post('/unsubscribe', function (req, res, next) {
 
 router.post('/disconnect', function (req, res, next) {
     var { clientId } = req.body;
-    var client = clients[clientId].client
-    client.end()
+    clients[clientId].client.end();
+    clients[clientId].socket.close();
+    res.end(`Client ${clientId} disconnected gracefully`)
+
 });
 
 
@@ -75,7 +77,7 @@ appWs.ws("/client_ws", function (ws, req) {
             console.log("disconnect")
             clients[mes].client.options.keepalive = clients[mes].client.options.keepalive * 10
             clients[mes].client.options.reconnectPeriod = 0
-            clients[mes] = undefined
+            clients[mes] = null
         });
         
         clients[mes].client.on("message", function (topic, message) {

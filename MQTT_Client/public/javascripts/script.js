@@ -43,13 +43,19 @@ function unsubscribe_click() {
 }
 
 function disconnect_click() {
-  fetch("client/disconnect", {
-    method: 'post',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      clientId: clientId,
-    })
-  }).then(res => res.text()).then(show_info)
+  
+  if (btn_disconnect.innerHTML == "DISCONNECT"){
+    btn_disconnect.innerHTML = "RECONNECT"
+    fetch("client/disconnect", {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        clientId: clientId,
+      })
+    }).then(res => res.text()).then(show_info)
+  }else{
+    client_connect()
+  }
 
 }
 

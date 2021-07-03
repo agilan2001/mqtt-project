@@ -112,8 +112,9 @@
         font-size: 20px;
         border: 2px solid yellow;
         border-radius: 5px;">asd</div>
-        <button class="btn button-circle-red m-3" style="float:right; border-radius: 50px;"
-            onclick="disconnect_click()">DISCONNECT</button>
+        <button id="btn_disconnect" class="btn button-circle-red m-3" style="float:right; border-radius: 50px;"
+            onclick="disconnect_click(this)">DISCONNECT</button>
+        
     </div>
     <div class="toast-container" id="mes_cont" style="position: absolute; right: 10px; top: 10px;">
         <div class="toast bg-info">
@@ -149,25 +150,32 @@
     <script>
         var clientId = "<%= clientId %>"
         var trans_port = "<%= trans_prot %>"
-        fetch("client/connect", {
-            method: 'post',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                clientId: clientId,
-                keep_alive: parseInt(<%= keep_alive %>),
-                    <% if(last_will_topic) { %>
-                last_will_topic: "<%= last_will_topic %>",
-                    last_will_mes: "<%= last_will_mes %>",
-                        last_will_qos: parseInt(<%= last_will_qos %>),
-                            last_will_retain: <%= last_will_retain %>,
-                    <% } %>
-            broker_url: "<%= broker_url %>",
-            broker_port: parseInt(<%= broker_port %>),
-            trans_prot: trans_port,
-                })
-            }).then(res => res.text()).then(text => {
-                console.log(text)
 
+        client_connect();
+
+        document.body.style.backgroundColor = (trans_port == 'tcp') ? 'yellowgreen' : 'cornflowerblue';
+        trans_prot_div.innerHTML = (trans_port == 'tcp') ? 'TCP + TLS' : 'QUIC';
+
+        function client_connect(){
+            fetch("client/connect", {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    clientId: clientId,
+                    keep_alive: parseInt(<%= keep_alive %>),
+                        <% if(last_will_topic) { %>
+                            last_will_topic: "<%= last_will_topic %>",
+                            last_will_mes: "<%= last_will_mes %>",
+                            last_will_qos: parseInt(<%= last_will_qos %>),
+                            last_will_retain: <%= last_will_retain %>,
+                        <% } %>
+                    broker_url: "<%= broker_url %>",
+                    broker_port: parseInt(<%= broker_port %>),
+                    trans_prot: trans_port,
+                    })
+            }).then(res => res.text()).then(text => {
+                show_info(text)
+                btn_disconnect.innerHTML = "DISCONNECT"
                 ws = new WebSocket(`ws://${window.location.host.split(":")[0] + ":5000"}/client_ws`);
                 ws.addEventListener('open', function (event) {
                     ws.send(clientId);
@@ -193,9 +201,9 @@
                     })
                 })
             })
+        }
 
-        document.body.style.backgroundColor = (trans_port == 'tcp') ? 'yellowgreen' : 'cornflowerblue';
-        trans_prot_div.innerHTML = (trans_port == 'tcp') ? 'TCP + TLS' : 'QUIC';
+        
     </script>
     <script src="/javascripts/script.js"></script>
 
