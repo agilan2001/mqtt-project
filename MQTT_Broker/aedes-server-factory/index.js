@@ -2,8 +2,6 @@ const fs = require('fs')
 const aedes = require('aedes')();
 const serverFactory = require('aedes-server-factory');
 
-const log = fs.createWriteStream('tls_log.txt', { flags: 'a' });
-
 const quic_server = require('aedes-server-factory').createServer(aedes,
     {
         quic: {
