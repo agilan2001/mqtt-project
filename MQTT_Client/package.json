@@ -14,6 +14,6 @@
     "express-ws": "^5.0.2",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
-    "mqtt": "github:agilan2001/MQTT.js"
+    "mqtt": "github:agilan2001/MQTT.js#0f2f570e47fc6123cb60c7a3402f54438eb3d062"
   }
 }
