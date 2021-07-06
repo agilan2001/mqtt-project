@@ -11,6 +11,10 @@ appWs.ws("/lab_ws", function (ws, req) {
         if (val.param == 'bomb' ) {
             bomb_test(ws, val)
         }
+
+        if (val.param == 'rtt' ) {
+            round_trip(ws, val)
+        }
     })
 })
 appWs.listen(5500);
@@ -102,6 +106,19 @@ function bomb_test(ws, val) {
 
 function round_trip(ws, val){
 
-    //**************** */
+    /**************** 
+        val contains the following fields
+        val :{
+             param: 'rtt',
+            broker: broker url
+            TCP_port: 
+            QUIC_port: 
+            upd_inter: 
+        }
+
+        ws is the websocket that sends the results to the browser
+        use ws.send() to send the result to the browser
+
+    */
 
 }
