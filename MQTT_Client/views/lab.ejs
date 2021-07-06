@@ -17,16 +17,16 @@
 <body class="bg-img-2">
 
 
-    <h2 class="mb-5" style="text-align:center; font-family:'Lobster',monospace;">
+    <h1 class="mb-5" style="text-align:center; font-family:'Lobster',monospace;">
         <%= title %>
-    </h2>
+    </h1>
 
     <div class="card mb-5" style="border-width: 5px;">
         <div class="card-body">
             <h3 class="card-title mb-3">BOMBING Frequency</h3>
             <div class='row g-2 mb-5'>
                 <div class="form-floating col-sm-2">
-                    <input type="text" class="form-control" id="broker_url_txt" name="broker_url" value="10.137.89.22"
+                    <input type="text" class="form-control" id="broker_url_txt" value="10.137.89.22"
                         placeholder="Broker URL">
                     <label for="broker_url_txt">Broker</label>
                 </div>
@@ -61,6 +61,41 @@
             </div>
         </div>
     </div>
+
+    <div class="card mb-5" style="border-width: 5px;">
+        <div class="card-body">
+            <h3 class="card-title mb-3">ROUND TRIP Time</h3>
+            <div class='row g-2 mb-5'>
+                <div class="form-floating col-sm-2">
+                    <input type="text" class="form-control" id="rtt_broker_url_txt" value="10.137.89.22"
+                        placeholder="Broker URL">
+                    <label for="broker_url_txt">Broker</label>
+                </div>
+
+                <div class="form-floating col-sm-1">
+                    <input type="text" class="form-control" id="rtt_tcp_broker_port_txt" value="1885"
+                        placeholder="TCP PORT">
+                    <label for="tcp_broker_port_txt">TCP PORT</label>
+                </div>
+
+                <div class="form-floating col-sm-1">
+                    <input type="text" class="form-control" id="rtt_quic_broker_port_txt" value="8885"
+                        placeholder="QUIC PORT">
+                    <label for="quic_broker_port_txt">QUIC PORT</label>
+                </div>
+
+                
+                <button class="btn btn-primary col-sm-1" onclick="rtt_click()" id="btn_rtt">START</button>
+            </div>
+
+            <div style="display: flex; justify-content: space-evenly; flex-wrap: wrap;">
+                <div class="col-sm-5">
+                    <canvas id="rtt_chart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"

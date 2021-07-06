@@ -96,6 +96,56 @@ var bomb_rec_chart = new Chart(document.getElementById('bomb_rec_chart'), {
     },
 })
 
+
+var rtt_chart = new Chart(document.getElementById('rtt_chart'), {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [
+            {
+                label: 'TCP',
+                data: [],
+                borderColor: "red",
+                //backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.5),
+            },
+            {
+                label: 'QUIC',
+                data: [],
+                borderColor: "blue",
+                //backgroundColor: Utils.transparentize(Utils.CHART_COLORS.blue, 0.5),
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            x: {
+                display: true,
+                title: {
+                    display: true,
+                    text: 'Trials',
+                }
+            },
+            y: {
+                display: true,
+                title: {
+                    display: true,
+                    text: 'Time',
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Round Trip Time'
+            }
+        }
+    },
+})
+
 var ws_bomb;
 
 function bomb_click() {
@@ -107,14 +157,14 @@ function bomb_click() {
         btn_bomb.classList.add('btn-danger');
 
         var cnt = 1;
-        bomb_send_chart.data.labels=[];
-        bomb_send_chart.data.datasets[0].data=[];
-        bomb_send_chart.data.datasets[1].data=[];
+        bomb_send_chart.data.labels = [];
+        bomb_send_chart.data.datasets[0].data = [];
+        bomb_send_chart.data.datasets[1].data = [];
         bomb_send_chart.update()
 
-        bomb_rec_chart.data.labels=[];
-        bomb_rec_chart.data.datasets[0].data=[];
-        bomb_rec_chart.data.datasets[1].data=[];
+        bomb_rec_chart.data.labels = [];
+        bomb_rec_chart.data.datasets[0].data = [];
+        bomb_rec_chart.data.datasets[1].data = [];
         bomb_rec_chart.update()
 
         ws_bomb = new WebSocket(`ws://${window.location.host.split(":")[0] + ":5500"}/lab_ws`);
@@ -149,5 +199,52 @@ function bomb_click() {
         btn_bomb.classList.remove('btn-danger');
         btn_bomb.classList.add('btn-primary');
         ws_bomb.close()
+    }
+}
+
+var ws_rtt;
+
+function rtt_click() {
+
+    if (btn_rtt.innerHTML == "START") {
+        btn_rtt.innerHTML = "STOP";
+        btn_rtt.classList.remove('btn-primary');
+        btn_rtt.classList.add('btn-danger');
+
+        rtt_chart.data.labels = [];
+        rtt_chart.data.datasets[0].data = [];
+        rtt_chart.data.datasets[1].data = [];
+        rtt_chart.update()
+
+        ws_rtt = new WebSocket(`ws://${window.location.host.split(":")[0] + ":5500"}/lab_ws`);
+        ws_rtt.addEventListener("open", () => {
+            ws_rtt.send(JSON.stringify({
+                param: 'rtt',
+                broker: rtt_broker_url_txt.value,
+                TCP_port: parseInt(rtt_tcp_broker_port_txt.value),
+                QUIC_port: parseInt(rtt_quic_broker_port_txt),
+            }))
+        })
+
+        ws_rtt.addEventListener('message', (event) => {
+            var val = JSON.parse(event.data);
+
+            if ('TCP_RTT' in val) {
+                console.log(val.TCP_RTT)
+                rtt_chart.data.datasets[0].data.push(val.TCP_RTT)
+            } else {
+                rtt_chart.data.datasets[1].data.push(val.QUIC_RTT)
+            }
+
+        
+            rtt_chart.data.labels = [...Array(Math.max(rtt_chart.data.datasets[0].data.length, rtt_chart.data.datasets[1].data.length)+1).keys()].slice(1)
+            console.log(rtt_chart.data.labels)
+            rtt_chart.update()
+        })
+    } else {
+        btn_rtt.innerHTML = "START";
+        btn_rtt.classList.remove('btn-danger');
+        btn_rtt.classList.add('btn-primary');
+        ws_rtt.close()
     }
 }
