@@ -13,7 +13,7 @@ appWs.ws("/lab_ws", function (ws, req) {
         }
 
         if (val.param == 'rtt' ) {
-            round_trip(ws, val)
+            setInterval(round_trip(ws, val),2000);
         }
     })
 })
@@ -104,12 +104,13 @@ function bomb_test(ws, val) {
     
 }
 
+
 function round_trip(ws, val){
 
     /**************** 
         val contains the following fields
         val :{
-             param: 'rtt',
+            aram: 'rtt',
             broker: broker url
             TCP_port: 
             QUIC_port: 
@@ -120,5 +121,48 @@ function round_trip(ws, val){
         use ws.send() to send the result to the browser
 
     */
+    var TCP_pub_time = 0;
+    var TCP_rec_time = 0;
+    var QUIC_pub_time = 0;
+    var QUIC_rec_time = 0;
+
+    var TCP_client = mqtt.connect(`mqtts://${val.broker}:1885`, 
+    { rejectUnauthorized: false, keepalive: 60 })
+    TCP_client.on('connect',()=>{
+        TCP_client.publish('rtt_test','HEY!',{qos:1,retain:true},()=>{
+            TCP_pub_time = Date.now();
+        })
+    })
+    var a;
+    TCP_client.on('connect',()=>{
+        TCP_client.subscribe('rtt_test',()=>{
+            TCP_client.on('message',()=>{
+                TCP_rec_time = Date.now(),
+            })
+        })
+    })
+    var RTT_TCP = TCP_rec_time-TCP_sent_time;
+
+    var QUIC_client = mqtt.connect(`quic://${val.broker}:8885`, 
+        { rejectUnauthorized: false, keepalive: 60 },
+        
+    )
+    QUIC_client.on('connect',()=>{
+        QUIC_client.publish('rtt_test','HEY!',{qos:1,retain:true},()=>{
+            QUIC_pub_time = Date.now();
+        })
+    })
+    
+
+    QUIC_client.on('connect',()=>{
+        QUIC_client.subscribe('rtt_test',()=>{
+            TCP_client.on('message',()=>{
+                QUIC_rec_time = Date.now();
+            })
+        })
+    })
+    var RTT_QUIC = QUIC_rec_time-QUIC_sent_time;
+    ws.send(JSON.stringify({RTT_TCP,RTT_QUIC}));
+
 
 }
