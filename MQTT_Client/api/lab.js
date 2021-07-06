@@ -137,7 +137,7 @@ function round_trip(ws, val){
     TCP_client.on('connect',()=>{
         TCP_client.subscribe('rtt_test',()=>{
             TCP_client.on('message',()=>{
-                TCP_rec_time = Date.now(),
+                TCP_rec_time = Date.now()
             })
         })
     })
