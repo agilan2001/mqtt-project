@@ -69,19 +69,19 @@
                 <div class="form-floating col-sm-2">
                     <input type="text" class="form-control" id="rtt_broker_url_txt" value="10.137.89.22"
                         placeholder="Broker URL">
-                    <label for="broker_url_txt">Broker</label>
+                    <label for="rtt_broker_url_txt">Broker</label>
                 </div>
 
                 <div class="form-floating col-sm-1">
                     <input type="text" class="form-control" id="rtt_tcp_broker_port_txt" value="1885"
                         placeholder="TCP PORT">
-                    <label for="tcp_broker_port_txt">TCP PORT</label>
+                    <label for="rtt_tcp_broker_port_txt">TCP PORT</label>
                 </div>
 
                 <div class="form-floating col-sm-1">
                     <input type="text" class="form-control" id="rtt_quic_broker_port_txt" value="8885"
                         placeholder="QUIC PORT">
-                    <label for="quic_broker_port_txt">QUIC PORT</label>
+                    <label for="rtt_quic_broker_port_txt">QUIC PORT</label>
                 </div>
 
                 
@@ -91,6 +91,40 @@
             <div style="display: flex; justify-content: space-evenly; flex-wrap: wrap;">
                 <div class="col-sm-5">
                     <canvas id="rtt_chart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-5" style="border-width: 5px;">
+        <div class="card-body">
+            <h3 class="card-title mb-3">REINCARNATION Time</h3>
+            <div class='row g-2 mb-5'>
+                <div class="form-floating col-sm-2">
+                    <input type="text" class="form-control" id="rit_broker_url_txt" value="10.137.89.22"
+                        placeholder="Broker URL">
+                    <label for="rit_broker_url_txt">Broker</label>
+                </div>
+
+                <div class="form-floating col-sm-1">
+                    <input type="text" class="form-control" id="rit_tcp_broker_port_txt" value="1885"
+                        placeholder="TCP PORT">
+                    <label for="rit_tcp_broker_port_txt">TCP PORT</label>
+                </div>
+
+                <div class="form-floating col-sm-1">
+                    <input type="text" class="form-control" id="rit_quic_broker_port_txt" value="8885"
+                        placeholder="QUIC PORT">
+                    <label for="rit_quic_broker_port_txt">QUIC PORT</label>
+                </div>
+
+                
+                <button class="btn btn-primary col-sm-1" onclick="rit_click()" id="btn_rit">START</button>
+            </div>
+
+            <div style="display: flex; justify-content: space-evenly; flex-wrap: wrap;">
+                <div class="col-sm-5">
+                    <canvas id="rit_chart" width="400" height="200"></canvas>
                 </div>
             </div>
         </div>

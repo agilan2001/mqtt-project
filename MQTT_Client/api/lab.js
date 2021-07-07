@@ -15,6 +15,10 @@ appWs.ws("/lab_ws", function (ws, req) {
         if (val.param == 'rtt') {
             round_trip(ws, val);
         }
+
+        if (val.param == 'rit') {
+            reincarnate_time(ws, val)
+        }
     })
 })
 appWs.listen(5500);
@@ -111,11 +115,9 @@ var QUIC_rec_time;
 
 function round_trip(ws, val) {
 
-
-
+    //************ Client TCP 
     var TCP_client = mqtt.connect(`mqtts://${val.broker}:1885`,
         { rejectUnauthorized: false, keepalive: 60 })
-
 
     TCP_client.on('connect', () => {
         TCP_client.subscribe('rtt_test', () => {
@@ -138,7 +140,7 @@ function round_trip(ws, val) {
         })
     })
 
-
+    //************ Client QUIC 
     var QUIC_client = mqtt.connect(`quic://${val.broker}:8885`,
         { rejectUnauthorized: false, keepalive: 60 })
 
@@ -168,5 +170,54 @@ function round_trip(ws, val) {
         QUIC_client.end(); TCP_client.end()
     })
 
-    
+}
+
+
+var TCP_cnct_time;
+var TCP_cnak_time;
+var QUIC_cnct_time;
+var QUIC_cnak_time;
+
+function reincarnate_time(ws, val) {
+
+    //************ Client TCP 
+
+    TCP_cnct_time = Date.now();
+    var TCP_client = mqtt.connect(`mqtts://${val.broker}:1885`,
+        { rejectUnauthorized: false, keepalive: 60 })
+
+    TCP_client.on('connect', () => {
+
+        TCP_cnak_time = Date.now();
+        ws.send(JSON.stringify({ TCP_RIT: TCP_cnak_time - TCP_cnct_time }))
+        TCP_client.end();
+
+        setTimeout(() => {
+            TCP_cnct_time = Date.now();
+            TCP_client.reconnect()
+        }, 2000)
+    })
+
+    //************ Client QUIC 
+    QUIC_cnct_time = Date.now();
+    var QUIC_client = mqtt.connect(`quic://${val.broker}:8885`,
+        { rejectUnauthorized: false, keepalive: 60 })
+
+    QUIC_client.on('connect', () => {
+
+        QUIC_cnak_time = Date.now();
+        ws.send(JSON.stringify({ QUIC_RIT: QUIC_cnak_time - QUIC_cnct_time }))
+        QUIC_client.end();
+
+        setTimeout(() => {
+            QUIC_cnct_time = Date.now();
+            QUIC_client.reconnect()
+        }, 2000)
+    })
+
+    ws.on('close', () => {
+        console.log('rit_end');
+        QUIC_client.end(); TCP_client.end()
+    })
+
 }

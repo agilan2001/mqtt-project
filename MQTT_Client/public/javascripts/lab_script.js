@@ -146,6 +146,57 @@ var rtt_chart = new Chart(document.getElementById('rtt_chart'), {
     },
 })
 
+
+var rit_chart = new Chart(document.getElementById('rit_chart'), {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [
+            {
+                label: 'TCP',
+                data: [],
+                borderColor: "red",
+                //backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.5),
+            },
+            {
+                label: 'QUIC',
+                data: [],
+                borderColor: "blue",
+                //backgroundColor: Utils.transparentize(Utils.CHART_COLORS.blue, 0.5),
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            x: {
+                display: true,
+                title: {
+                    display: true,
+                    text: 'Trials',
+                }
+            },
+            y: {
+                display: true,
+                title: {
+                    display: true,
+                    text: 'Time',
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Reincarnation Time'
+            }
+        }
+    },
+})
+
+
 var ws_bomb;
 
 function bomb_click() {
@@ -230,7 +281,7 @@ function rtt_click() {
             var val = JSON.parse(event.data);
 
             if ('TCP_RTT' in val) {
-                console.log(val.TCP_RTT)
+                // console.log(val.TCP_RTT)
                 rtt_chart.data.datasets[0].data.push(val.TCP_RTT)
             } else {
                 rtt_chart.data.datasets[1].data.push(val.QUIC_RTT)
@@ -238,7 +289,7 @@ function rtt_click() {
 
         
             rtt_chart.data.labels = [...Array(Math.max(rtt_chart.data.datasets[0].data.length, rtt_chart.data.datasets[1].data.length)+1).keys()].slice(1)
-            console.log(rtt_chart.data.labels)
+            // console.log(rtt_chart.data.labels)
             rtt_chart.update()
         })
     } else {
@@ -246,5 +297,53 @@ function rtt_click() {
         btn_rtt.classList.remove('btn-danger');
         btn_rtt.classList.add('btn-primary');
         ws_rtt.close()
+    }
+}
+
+
+var ws_rit;
+
+function rit_click() {
+
+    if (btn_rit.innerHTML == "START") {
+        btn_rit.innerHTML = "STOP";
+        btn_rit.classList.remove('btn-primary');
+        btn_rit.classList.add('btn-danger');
+
+        rit_chart.data.labels = [];
+        rit_chart.data.datasets[0].data = [];
+        rit_chart.data.datasets[1].data = [];
+        rit_chart.update()
+
+        ws_rit = new WebSocket(`ws://${window.location.host.split(":")[0] + ":5500"}/lab_ws`);
+        ws_rit.addEventListener("open", () => {
+            ws_rit.send(JSON.stringify({
+                param: 'rit',
+                broker: rit_broker_url_txt.value,
+                TCP_port: parseInt(rit_tcp_broker_port_txt.value),
+                QUIC_port: parseInt(rit_quic_broker_port_txt),
+            }))
+        })
+
+        ws_rit.addEventListener('message', (event) => {
+            var val = JSON.parse(event.data);
+
+            if ('TCP_RIT' in val) {
+                console.log(val.TCP_RIT)
+                rit_chart.data.datasets[0].data.push(val.TCP_RIT)
+            } else {
+                rit_chart.data.datasets[1].data.push(val.QUIC_RIT)
+            }
+
+        
+            rit_chart.data.labels = [...Array(Math.max(rit_chart.data.datasets[0].data.length, rit_chart.data.datasets[1].data.length)+1).keys()].slice(1)
+            // console.log(rtt_chart.data.labels)
+            rit_chart.update()
+        })
+    } else {
+        btn_rit.innerHTML = "START";
+        btn_rit.classList.remove('btn-danger');
+        btn_rit.classList.add('btn-primary');
+        ws_rit.close()
     }
 }
