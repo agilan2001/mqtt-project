@@ -95,7 +95,7 @@ function bomb_test(ws, val) {
         }
     )
 
-    setInterval(() => {
+    var bomb_inter = setInterval(() => {
         ws.send(JSON.stringify({ TCP_sent_cnt, QUIC_sent_cnt, TCP_rec_cnt, QUIC_rec_cnt }))
         TCP_sent_cnt = 0; QUIC_sent_cnt = 0; TCP_rec_cnt = 0; QUIC_rec_cnt = 0;
     }, 1000 * val.upd_inter)
@@ -103,6 +103,7 @@ function bomb_test(ws, val) {
     ws.on('close', () => {
         console.log('bomb_end');
         client_TCP_send.end(); client_QUIC_send.end(); client_TCP_rec.end(); client_QUIC_rec.end();
+        clearInterval(bomb_inter);
     })
 
 
@@ -116,6 +117,7 @@ var QUIC_rec_time;
 function round_trip(ws, val) {
 
     //************ Client TCP 
+    var tcp_rtt_timeout;
     var TCP_client = mqtt.connect(`mqtts://${val.broker}:1885`,
         { rejectUnauthorized: false, keepalive: 60 })
 
@@ -126,7 +128,7 @@ function round_trip(ws, val) {
                 TCP_rec_time = Date.now();
                 ws.send(JSON.stringify({ TCP_RTT: TCP_rec_time - TCP_pub_time }))
 
-                setTimeout(() => {
+                tcp_rtt_timeout = setTimeout(() => {
                     TCP_client.publish('rtt_test', 'rtt', () => {
                         TCP_pub_time = Date.now();
                     })
@@ -141,6 +143,7 @@ function round_trip(ws, val) {
     })
 
     //************ Client QUIC 
+    var quic_rtt_timeout;
     var QUIC_client = mqtt.connect(`quic://${val.broker}:8885`,
         { rejectUnauthorized: false, keepalive: 60 })
 
@@ -151,7 +154,7 @@ function round_trip(ws, val) {
                 QUIC_rec_time = Date.now();
                 ws.send(JSON.stringify({ QUIC_RTT: QUIC_rec_time - QUIC_pub_time }))
 
-                setTimeout(() => {
+                quic_rtt_timeout = setTimeout(() => {
                     QUIC_client.publish('rtt_quic', 'rtt', () => {
                         QUIC_pub_time = Date.now();
                     })
@@ -168,6 +171,8 @@ function round_trip(ws, val) {
     ws.on('close', () => {
         console.log('rtt_end');
         QUIC_client.end(); TCP_client.end()
+        clearTimeout(tcp_rtt_timeout);
+        clearTimeout(quic_rtt_timeout);
     })
 
 }
@@ -181,7 +186,7 @@ var QUIC_cnak_time;
 function reincarnate_time(ws, val) {
 
     //************ Client TCP 
-
+    var tcp_rit_timeout;
     TCP_cnct_time = Date.now();
     var TCP_client = mqtt.connect(`mqtts://${val.broker}:1885`,
         { rejectUnauthorized: false, keepalive: 60 })
@@ -192,13 +197,14 @@ function reincarnate_time(ws, val) {
         ws.send(JSON.stringify({ TCP_RIT: TCP_cnak_time - TCP_cnct_time }))
         TCP_client.end();
 
-        setTimeout(() => {
+        tcp_rit_timeout = setTimeout(() => {
             TCP_cnct_time = Date.now();
             TCP_client.reconnect()
         }, 2000)
     })
 
     //************ Client QUIC 
+    var quic_rit_timeout;
     QUIC_cnct_time = Date.now();
     var QUIC_client = mqtt.connect(`quic://${val.broker}:8885`,
         { rejectUnauthorized: false, keepalive: 60 })
@@ -209,7 +215,7 @@ function reincarnate_time(ws, val) {
         ws.send(JSON.stringify({ QUIC_RIT: QUIC_cnak_time - QUIC_cnct_time }))
         QUIC_client.end();
 
-        setTimeout(() => {
+        quic_rit_timeout = setTimeout(() => {
             QUIC_cnct_time = Date.now();
             QUIC_client.reconnect()
         }, 2000)
@@ -217,7 +223,10 @@ function reincarnate_time(ws, val) {
 
     ws.on('close', () => {
         console.log('rit_end');
-        QUIC_client.end(); TCP_client.end()
+        console.log(tcp_rit_timeout)
+        clearTimeout(tcp_rit_timeout);
+        clearTimeout(quic_rit_timeout);
+        QUIC_client.end(); TCP_client.end();
     })
 
 }
